@@ -2,45 +2,33 @@ import streamlit as st
 import os
 import base64
 
-# Ρύθμιση σελίδας για να πιάνει όλο το πλάτος
 st.set_page_config(page_title="U33/U34 Booklets", layout="wide")
 
-st.title("📄 Επιλογή Booklet")
+st.title("📄 Booklet U33/U34")
 
-# Δημιουργία μενού επιλογής στο πλάι ή στο κέντρο
-choice = st.radio(
-    "Επιλέξτε το έγγραφο που θέλετε να δείτε:",
-    ("U33", "U34"),
-    horizontal=True
-)
-
-# Ορισμός ονόματος αρχείου βάσει επιλογής
+choice = st.radio("Επιλέξτε Booklet:", ("U33", "U34"), horizontal=True)
 pdf_filename = f"{choice}.pdf"
 
-def displayPDF(file):
+def display_pdf(file):
     if os.path.exists(file):
         with open(file, "rb") as f:
-            pdf_bytes = f.read()
+            pdf_data = f.read()
         
-        # Μετατροπή σε base64 για προβολή
-        base64_pdf = base64.b64encode(pdf_bytes).decode('utf-8')
+        base64_pdf = base64.b64encode(pdf_data).decode('utf-8')
         
-        # Οδηγίες αναζήτησης
-        st.info(f"🔍 Αναζήτηση στο {choice}: Πατήστε Ctrl+F ή τον μεγεθυντικό φακό.")
-
-        # HTML κώδικας για το iframe
+        # Χρησιμοποιούμε αντικείμενο <object> αντί για <iframe> 
+        # και προσθέτουμε παραμέτρους για τον viewer
         pdf_display = f'''
-            <iframe 
-                src="data:application/pdf;base64,{base64_pdf}" 
-                width="100%" 
-                height="900" 
-                style="border: 2px solid #eeeeee;"
-                type="application/pdf">
-            </iframe>
+            <center>
+                <object data="data:application/pdf;base64,{base64_pdf}" type="application/pdf" width="100%" height="900px">
+                    <embed src="data:application/pdf;base64,{base64_pdf}" type="application/pdf" />
+                    <p>Η συσκευή σας δεν υποστηρίζει την απευθείας προβολή. 
+                    <a href="data:application/pdf;base64,{base64_pdf}" target="_blank">Πιέστε εδώ για άνοιγμα.</a></p>
+                </object>
+            </center>
         '''
         st.markdown(pdf_display, unsafe_allow_html=True)
     else:
-        st.error(f"⚠️ Το αρχείο {file} δεν βρέθηκε στο GitHub. Βεβαιωθείτε ότι το ονομάσατε ακριβώς έτσι.")
+        st.error(f"Το αρχείο {file} δεν βρέθηκε.")
 
-# Εκτέλεση της συνάρτησης
-displayPDF(pdf_filename)
+display_pdf(pdf_filename)
