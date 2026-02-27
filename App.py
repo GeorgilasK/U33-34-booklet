@@ -3,7 +3,7 @@ import base64
 
 st.set_page_config(page_title="PDF Viewer", layout="wide")
 
-st.title("📄 Οδηγός / Έγγραφο Συναδέλφων")
+st.title("📄 U33-34.booklet")
 
 def displayPDF(file):
     # Διάβασμα του αρχείου
