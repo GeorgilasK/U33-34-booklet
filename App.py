@@ -1,34 +1,22 @@
 import streamlit as st
-import os
 import base64
+import os
 
-st.set_page_config(page_title="U33/U34 Booklets", layout="wide")
+st.set_page_config(page_title="U33/U34", layout="centered")
 
-st.title("📄 Booklet U33/U34")
-
-choice = st.radio("Επιλέξτε Booklet:", ("U33", "U34"), horizontal=True)
+choice = st.radio("Επιλέξτε αρχείο:", ("U33", "U34"), horizontal=True)
 pdf_filename = f"{choice}.pdf"
 
-def display_pdf(file):
-    if os.path.exists(file):
-        with open(file, "rb") as f:
-            pdf_data = f.read()
-        
-        base64_pdf = base64.b64encode(pdf_data).decode('utf-8')
-        
-        # Χρησιμοποιούμε αντικείμενο <object> αντί για <iframe> 
-        # και προσθέτουμε παραμέτρους για τον viewer
-        pdf_display = f'''
-            <center>
-                <object data="data:application/pdf;base64,{base64_pdf}" type="application/pdf" width="100%" height="900px">
-                    <embed src="data:application/pdf;base64,{base64_pdf}" type="application/pdf" />
-                    <p>Η συσκευή σας δεν υποστηρίζει την απευθείας προβολή. 
-                    <a href="data:application/pdf;base64,{base64_pdf}" target="_blank">Πιέστε εδώ για άνοιγμα.</a></p>
-                </object>
-            </center>
-        '''
-        st.markdown(pdf_display, unsafe_allow_html=True)
-    else:
-        st.error(f"Το αρχείο {file} δεν βρέθηκε.")
-
-display_pdf(pdf_filename)
+if os.path.exists(pdf_filename):
+    with open(pdf_filename, "rb") as f:
+        pdf_data = f.read()
+    
+    b64 = base64.b64encode(pdf_data).decode()
+    
+    # Αυτό δημιουργεί ένα link που ανοίγει το PDF σε νέο tab 
+    # και ενεργοποιεί τον native viewer του iPhone
+    href = f'<a href="data:application/pdf;base64,{b64}" target="_blank" style="display: inline-block; padding: 15px 25px; font-size: 20px; cursor: pointer; text-align: center; text-decoration: none; outline: none; color: #fff; background-color: #4CAF50; border: none; border-radius: 15px; width: 100%;">🔍 Άνοιγμα {choice} (Full Scroll & Search)</a>'
+    
+    st.markdown(href, unsafe_allow_html=True)
+    st.write("---")
+    st.caption("Σημείωση: Μετά το άνοιγμα, πατήστε το εικονίδιο αναζήτησης του browser.")
