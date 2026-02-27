@@ -17,6 +17,6 @@ def displayPDF(file):
     st.markdown(pdf_display, unsafe_allow_html=True)
 
 # Το όνομα του αρχείου σου στο GitHub
-pdf_filename = "document.pdf" 
+pdf_filename = "U33-34.booklet.pdf" 
 
 displayPDF(pdf_filename)
